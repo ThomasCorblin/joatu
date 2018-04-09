@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}
+    <title>Home</title>
+{% endblock title %}
+
+{% block body %}
+
+
+<div class="container-fluid">
+    <div id="main_content">
+        Click on the top left corner !
+    </div>
+    
+</div>
+
+
+
+
+
+
+{% endblock body%}
+
+{% block script %}
+{% load static %}
+<script src="{% static 'js/homepage.js' %}"></script>
+<script src="{% static 'js/jquery.serialize-object.min.js' %}"></script>
+
+{% endblock script %}
