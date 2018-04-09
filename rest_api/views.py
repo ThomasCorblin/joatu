@@ -278,7 +278,7 @@ class CreateProfileView(CreateAPIView):
             response = super(CreateProfileView, self).create(request, *args, **kwargs)
             lat_cal, lng_cal = coordinates_calculation('', instance.__getitem__('postal_code'), instance.__getitem__('city'), instance.__getitem__('country'))
             profile= Profile.objects.get(user=self.request.user)
-            #ProfileGeolocation.objects.create(profile = profile, lat=lat_cal, lng= lng_cal)
+            ProfileGeolocation.objects.create(profile = profile, lat=lat_cal, lng= lng_cal)
             return redirect('homepage')
         except:
             print('error')
