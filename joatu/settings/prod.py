@@ -1,6 +1,6 @@
 from joatu.settings.base import *
 
-DEBUG = False
+DEBUG = True
 #ALLOWED_HOSTS = ['*']
 #DATABASES = {
 #    'default': {
