@@ -37,6 +37,7 @@ class ProfileGeolocation(models.Model):
     lng = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
 
 def ProfileGeolocation_created_or_updated(sender,update_fields, **kwargs):
+    print('1')
     instance = kwargs['instance']
     user= Profile.objects.get(pk=instance.profile.pk)
     hubList=Hub.objects.filter(city__unaccent__icontains=user.city)
