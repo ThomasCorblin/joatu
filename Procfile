@@ -1,1 +1,1 @@
-web: gunicorn joatu.wsgi --log-file -
+web: gunicorn joatu.wsgi
