@@ -23,8 +23,8 @@
                     <a href="/">Home</a>
                     <a class="nav-link" id="projects-tab" href="/list_projects/" >Activities</a>
                     <a class="nav-link" id="offers-tab"  href="/list_offers/" >Offers</a>
-                    <a class="nav-link" id="Demands-tab" href="/list_demands">Requests</a>
-                    <a href="">Settings</a>
+                    <a class="nav-link" id="Demands-tab" href="/list_demands/">Requests</a>
+                    <a class="nav-link" id="settings" href="/settings/">Settings</a>
                     <a href="{% url 'accounts:logout' %}">Log Out</a>
                     {% else %}
                         {% block login %}
@@ -36,7 +36,7 @@
             <div id="main">
                 <nav class="navbar navbar-dark bg-dark" style="height:60px;">
                     <span class="navbar-toggler-icon" id="open_navbar"></span>
-                    <img src="{% static 'images/logo_white_mobile.png' %}" class="navbar-brand mr-auto ml-auto" alt="logo Joatu"/>
+                    <img src="{% static 'images/logo_white_mobile.png' %}" class="navbar-brand  mr-auto" alt="logo Joatu" style="margin-left:15px;"/>
                 </nav> 
                 {% block body %}
                 {% endblock body %}

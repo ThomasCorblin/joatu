@@ -1,30 +1,42 @@
 $(document).ready(function(){
     var main = document.getElementById('swipediv');
     var mySidenav = document.getElementById('mySidenav');
-    var swr = new Hammer(main);
-    var swl = new Hammer(mySidenav)
+    var main_swipe = new Hammer(main);
+    var menu_swipe = new Hammer(mySidenav)
+    var menuIsOpen =false;
 /* Set the width of the side navigation to 250px */
 /* Set the width of the side navigation to 250px and the left margin of the page content to 250px and add a black background color to body */
     $('#open_navbar').click(function(){
-        $('#mySidenav').css('width','300px');
-        $('#main').css('margin-left', '250px');
-        $('body').css('background-color','rgba(39, 38, 38, 0.212)');
+        if(menuIsOpen===false){
+            $('#mySidenav').css('width','300px');
+            menuIsOpen=true;
+        }
+
     });
-    swr.on('swiperight',function(){
-        $('#mySidenav').css('width','300px');
-        $('#main').css('margin-left', '250px');
-        $('body').css('background-color','rgba(39, 38, 38, 0.212)');
+    main_swipe.on('swiperight',function(){
+        if(menuIsOpen===false){
+            $('#mySidenav').css('width','300px');
+            menuIsOpen=true;
+        }
     });
 /* Set the width of the side navigation to 0 and the left margin of the page content to 0, and the background color of body to white */
     $('#close_navbar').click(function(){
-        $('#mySidenav').css('width','0');
-        $('#main').css('margin', '0');
-        $('body').css('background-color','white');
+        if(menuIsOpen===true){
+            $('#mySidenav').css('width','0');
+            menuIsOpen=false;  
+        }
     });
-    swl.on('swipeleft',function(){
-        $('#mySidenav').css('width','0');
-        $('#main').css('margin', '0');
-        $('body').css('background-color','white');
+    menu_swipe.on('swipeleft',function(){
+        if(menuIsOpen===true){
+            $('#mySidenav').css('width','0');
+            menuIsOpen=false;  
+        }
+    });
+    main_swipe.on('swipeleft',function(){
+        if(menuIsOpen===true){
+            $('#mySidenav').css('width','0');
+            menuIsOpen=false;  
+        }
     });
 
 

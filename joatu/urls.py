@@ -28,6 +28,7 @@ urlpatterns = [
     path('rest_api/', include('rest_api.urls')),
     path('', TemplateView.as_view(template_name="homepage.html"), name='homepage'),
     path('create_profile/',TemplateView.as_view(template_name="profiles/create_profile.html"), name='create_profile'),
+    path('settings/',TemplateView.as_view(template_name="settings/settings.html"), name='settings'),
     path('create_project/',TemplateView.as_view(template_name="create_page/create_project.html"), name='create_project'),
     path('create_offer/',TemplateView.as_view(template_name="create_page/create_offer.html"), name='create_offer'),
     path('create_demand/',TemplateView.as_view(template_name="create_page/create_demand.html"), name='create_demand'),

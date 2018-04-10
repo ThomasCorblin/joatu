@@ -11,7 +11,7 @@ $(document).ready(function(){
     $('.datepicker').pickadate();
     
     /// PAGE1
-    $('input[name=category').click(function(e){ //when the user click on one of the category input
+    $('input[name=category]').click(function(e){ //when the user click on one of the category input
         $('input[name=sub_category]:checked').prop('checked',false);
         $('.select_sub_category').hide(); // hide all the subcategories div 
         $(this).parentsUntil('.select_category').next('.select_sub_category').show();// find parent and then show the next select_sub_category
