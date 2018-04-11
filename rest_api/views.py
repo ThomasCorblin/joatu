@@ -307,6 +307,7 @@ class EditProfileView(RetrieveUpdateAPIView):
     def update(self, request, *args, **kwargs):
         try:
             instance=request.data
+            print(instance)
             lat_cal, lng_cal = coordinates_calculation('', instance.__getitem__('postal_code'), instance.__getitem__('city'), instance.__getitem__('country'))
             response = super(EditProfileView, self).update(request, *args, **kwargs)
             profile= Profile.objects.get(user=self.request.user)

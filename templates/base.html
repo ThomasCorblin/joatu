@@ -38,6 +38,7 @@
                     <span class="navbar-toggler-icon" id="open_navbar"></span>
                     <img src="{% static 'images/logo_white_mobile.png' %}" class="navbar-brand  mr-auto" alt="logo Joatu" style="margin-left:15px;"/>
                 </nav> 
+                <input type="hidden" id="userId" value={{request.user.profile.id}}>
                 {% block body %}
                 {% endblock body %}
 

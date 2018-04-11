@@ -222,6 +222,7 @@ class UpdateProfileSerializers(serializers.ModelSerializer):
             'user',
             'display_name',
             'birth_date',
+            'street',
             'postal_code',
             'city',
             'country',   
