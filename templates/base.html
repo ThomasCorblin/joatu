@@ -39,9 +39,31 @@
             <div id="main">
                 <nav class="navbar navbar-dark bg-dark" style="height:60px;">
                     <span class="navbar-toggler-icon" id="open_navbar"></span>
-                    <img src="{% static 'images/logo_white_mobile.png' %}" class="navbar-brand  mr-auto" alt="logo Joatu" style="margin-left:15px;"/>
+                    <img src="{% static 'images/logo_white_mobile.png' %}" class="navbar-brand ml-auto  mr-auto" alt="logo Joatu"/>
                 </nav> 
                 <input type="hidden" id="userId" value={{request.user.profile.id}}>
+                    <div class="row">
+                        <div class="col-4"  style="text-align:center; border-right:1px solid rgb(168, 168, 168); border-bottom:1px solid rgb(168, 168, 168);">
+                            <a class="navbar-brand" href="#">
+                                   ?
+                            </a>
+                        </div>
+                        <div class="col-4" style="text-align:center; border-right:1px solid rgb(168, 168, 168); border-bottom:1px solid rgb(168, 168, 168);">
+                            <a class="navbar-brand" href="#" style="text-align:center;">
+                                <span style="font-size:1em;"><strong id="numb_CAPS"></strong> CAPS
+                                    </span>
+                            </a> 
+                        </div>
+
+                        <div class="col-4" style="text-align:center; border-bottom:1px solid rgb(168, 168, 168);">
+                            <a class="navbar-brand" href="#" >
+                                <span><strong id="numb_message"></strong>
+                                    <img src="{% static 'images/icon/message.png' %}" width="30" height="30" alt="">
+                                </span>
+                                
+                            </a> 
+                        </div>
+                    </div>
                 {% block body %}
                 {% endblock body %}
 
@@ -56,6 +78,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
     <script src="{% static 'js/mobile/menu-mobile.js' %}"></script>
+    <script src="{% static 'js/script.js' %}"></script>
 {% block script %}
 {% endblock script %}
 

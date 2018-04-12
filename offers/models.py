@@ -20,8 +20,8 @@ class Offer(models.Model):
     is_GIVE = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    price_CAPS = models.PositiveIntegerField(null=True)
-    price_barter = models.CharField(max_length = 200, null=True)
+    price_CAPS = models.PositiveIntegerField(null=True, blank=True)
+    price_barter = models.CharField(max_length = 200, null=True, blank=True)
 
 
 def Offer_created_or_updated(sender,update_fields, **kwargs):

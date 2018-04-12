@@ -62,7 +62,7 @@ class ProfileHub(models.Model):
     distance_km = models.DecimalField(max_digits=10, decimal_places=3, blank=False, null=True)
 
 class ProfileWallet(models.Model):
-    profile=models.OneToOneField(Profile, on_delete=models.SET_NULL, null=True)
+    profile=models.OneToOneField(Profile, on_delete=models.SET_NULL, null=True, related_name='profile_wallet')
     wallet = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
 
 

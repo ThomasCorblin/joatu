@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from profiles.models import Profile
+from profiles.models import Profile, ProfileHub, ProfileWallet
 from offers.models import Offer,Offer_Hub
 from demands.models import Demand, Demand_Hub
 from projects.models import *
@@ -10,7 +10,8 @@ from hubs.models import Hub
 class OfferShortSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Offer
-        fields = ('url','title', 'seller','is_CAPS','is_BARTER','is_GIVE', 'created','updated', )
+        fields = ('url','id','title', 'seller','is_CAPS','is_BARTER','is_GIVE','price_CAPS', 'created','updated', )
+        
 
 
 class Offer_HubSerializer(serializers.HyperlinkedModelSerializer):
@@ -188,6 +189,10 @@ class ProfileHubSerializer(serializers.HyperlinkedModelSerializer):
         model = ProfileHub
         fields = ('profile','hub',)
 
+class ProfileWalletSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProfileWallet
+        fields=('wallet',)
 
 class ProfileSerializer(serializers.HyperlinkedModelSerializer):
     profile_offers = serializers.HyperlinkedRelatedField(many=True, view_name='offer-detail', read_only=True)
@@ -196,11 +201,12 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
     user_volunteer= ProjectVolunteersRegistrationSerializer(many=True)
     user_attendee=ProjectAttendeesRegistrationSerializer(many=True)
     profile_hub =ProfileHubSerializer(many=True, read_only=True)
+    profile_wallet=ProfileWalletSerializer(read_only=True)
 
 
     class Meta:
         model = Profile
-        fields = ('url', 'display_name', 'city', 'country','profile_offers', 'profile_demands', 'profile_projects','user_volunteer', 'user_attendee', 'profile_hub' )
+        fields = ('url', 'display_name', 'city', 'country','profile_wallet','profile_offers', 'profile_demands', 'profile_projects','user_volunteer', 'user_attendee', 'profile_hub' )
 
 
 class CreateProfileSerializers(serializers.ModelSerializer):

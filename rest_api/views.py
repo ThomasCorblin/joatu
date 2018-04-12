@@ -23,10 +23,11 @@ class OfferViewSet(viewsets.ModelViewSet):
     This viewset automatically provides `list`, `create`, `retrieve`,
     `update` and `destroy` actions.
     """
-    queryset = Offer.objects.all().order_by('title')
+    queryset = Offer.objects.all().order_by('-created')
     serializer_class = OfferSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,
                           OfferIsOwnerOrReadOnly,)
+
 
     def create(self, request, *args, **kwargs):
         try:

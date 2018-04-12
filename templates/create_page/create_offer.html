@@ -1,6 +1,17 @@
+{% extends "base.html" %}
+{% block title %}
+    <title>Create Offer</title>
+{% endblock title %}
+{% block css %}
+{% load static %}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+{% endblock css %}
+{% block body %}
+{% load static %}
+
 <div id="form_creation">
-    offer
-    <form class="needs-validation" method="POST" action="" accept-charset="utf-8" enctype="multipart/form-data" id="form_offer" novalidate>
+    <form class="needs-validation" accept-charset="utf-8" enctype="multipart/form-data" id="form_offer">
         {% csrf_token %}
     
         <div>
@@ -35,10 +46,25 @@
                     <div class="invalid-feedback">Please enter your country</div>
             </div>
             <div>
-                    <input type="checkbox" name="is_CAPS" > Exchange for <input type="number" name="price_CAPS" class="is_required"> CAPS<br>
+                    <input type="checkbox" name="is_CAPS"> Exchange for <input type="number" name="price_CAPS" class="is_required"> CAPS<br>
                     <input type="checkbox" name="is_BARTER" > Exchange for <input type="text" name="price_barter" class="is_required"><br>
-                    <input type="checkbox" name="is_GIVE" > Give it for Free
+                    <input type="checkbox" name="is_GIVE"> Give it for Free
                 </div>
-            <button type="submit" class="btn btn-primary" >Submit</button>
+            <a class="btn btn-primary" id="submit_offer">Submit</a>
             </form>
         </div>
+
+{% endblock body%}
+
+{% block script %}
+{% load static %}
+    
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script>
+
+</script>
+
+<script src="{% static 'js/offers/create_offer.js' %}"></script>
+<script src="{% static 'js/jquery.serialize-object.min.js' %}"></script>
+
+{% endblock script %}
