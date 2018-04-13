@@ -1,330 +1,66 @@
 $(document).ready(function(){
 
-    var xhr = new XMLHttpRequest();
-
-    xhr.onload = function() {
-        if(xhr.status===200){
-            responseObject = JSON.parse(xhr.responseText);
-            var projectsList=responseObject.projects;
-            var demandsList=responseObject.demands;
-            var offersList=responseObject.offers;
-            // Show list of projects
-            for (var i=0; i<projectsList.length; i++ ){
-                $('#projects_table').append(
-                    $('<li>').append(
-                        $('<a>').attr({href:"/detail_project/"+ projectsList[i].project.id +"/", class:"project_detail"}).append(
-                            $('<span>').text(projectsList[i].project.name)
-                )));
-                  
+    var userId = $('#userId').attr('value');
+    var link = '/rest_api/profiles/'+userId+'/';
+    $.getJSON(link, function(data){ // load profile data
+        $.getJSON(data.profile_hub[0].hub, function(result){
+            var newsfeed=[];
+            var demands= result.demands;
+            var projects= result.projects;
+            var offers= result.offers;
+            for(i in projects){
+                newsfeed.push({
+                    'type':'project',
+                    'title':projects[i].project.name,
+                    'link':'/detail_project/'+projects[i].project.id+'/', 
+                    'created':projects[i].project.created
+                })
             }
-            // Show list of demands
-            for (var i=0; i<demandsList.length; i++ ){
-                $('#demands_table').append(
-                    $('<li>').append(
-                        $('<a>').attr({href:demandsList[i].demand.url, class:"demand_detail"}).append(
-                            $('<span>').text(demandsList[i].demand.title)
-                )));
-                  
+            for(i in demands){
+                newsfeed.push({
+                    'type':'request', 
+                    'title':demands[i].demand.title,
+                    'link':'/detail_demand/'+demands[i].demand.id+'/', 
+                    'created':demands[i].demand.created})
             }
-            // Show list of offers
-            for (var i=0; i<offersList.length; i++ ){
-                $('#offers_table').append(
-                    $('<li>').append(
-                        $('<a>').attr({href:offersList[i].offer.url, class:"offer_detail"}).append(
-                            $('<span>').text(offersList[i].offer.title)
-                )));
-                  
+            for(i in offers){
+                newsfeed.push({
+                    'type':'offer', 
+                    'title':offers[i].offer.title,
+                    'link':'/detail_offer/'+offers[i].offer.id+'/', 
+                    'created':offers[i].offer.created})
             }
-
-
-
-///////////////////////////////////////////////////////////SHOW DETAIL/////////////////////////////////////////////////////////////////////////////////
-
-    ///////////////////////////////////////////////////////PROJECT //////////////////////////////////////////////////////////////////////////////
-           // Show project detail in the Content right balise when user click on the link in the list
-           
-
-        ////////////////////////////////////////////////////////SUBMIT DISCUSSION/////////////////////////////////////////
-        $('#container-right').on("submit","#start_discussion",function(e){
-            var csrf = $('#right').find('input[name=csrfmiddlewaretoken]').val();
-            var url = '/rest_api/projects_discussion/';
-            var data = $('#start_discussion').serialize();    
-            $.ajax({
-                url: url,
-                method: "POST",
-                data:data,
-                beforeSend: function(xhr) {
-                    xhr.setRequestHeader("X-CSRFToken", csrf);
-                },
-                success: function(result){
-                    alert(result);
-                }
+            newsfeed.sort(function(a,b) { 
+                return new Date(b.created)- new Date(a.created)
             });
-            e.preventDefault();
+
+            for(i in newsfeed){
+                $('#newsfeed').append(
+                    $('<li>').css({'margin':'5px'}).append(
+                        $('<div>').attr('class','row').append(
+                            $('<div>').attr('class','col-6 offset-1').append(
+                                $('<span>').text(newsfeed[i].title)
+                            )
+                        ).append(
+                            $('<div>').attr('class','col-3 offset-2').append(
+                                $('<span>').text(newsfeed[i].type)
+                            )
+                        )
+                    ).append(
+                        $('<div>').attr('class','row').css({'margin-top':'15px'}).append(
+                            $('<div>').attr('class','col-9 offset-3').css('text-align','right').append(
+                                $('<a>').attr({'href':newsfeed[i].link,'class':'flat_button_preview'}).text('More details...')
+                            )
+                        )
+                    )
+                ).append(
+                    $('<hr>')
+                );
+            }
+            console.log(newsfeed);
 
         });
-
-  
-
-
-    ////////////////////////////////////////////////////////////DEMAND//////////////////////////////////////////////////////////////        
-            // Show demand detail in the Content right balise when user click on the link in the list
-            $('#demands_table').on('click','.demand_detail', function(e){
-                e.preventDefault();
-                var url = this.href;
-                $('#container-right').empty();
-                $('#container-right').append(
-                    $('<ul>').attr('id','content-right'));
-                $.getJSON( url, function(data ) {
-                    $.each( data, function( key, val ) {
-                        $('#content-right').append( "<li id='" + key + "'>"+ key + ' : '+  val + "</li>" );
-                    });
-                    if(data.user_Is_Owner === true){
-                        //$('#content-right').append('{% csrf_token %}');
-                        $('#content-right').append($('<a>').attr({href:data.url,id:"edit_demand"}).append($('<span>').text('Edit')));
-                        $('#content-right').append($('<a>').attr({href:data.url,id:"delete_detail"}).append($('<span>').text('Delete')));
-                    }
-                    
-                });
-            }); 
-
-    ////////////////////////////////////////////////////////////OFFER//////////////////////////////////////////////////////////////           
-            // Show offer detail in the Content right balise when user click on the link in the list
-            $('#offers_table').on('click','.offer_detail', function(e){
-                e.preventDefault();
-                var url = this.href;
-                $('#container-right').empty();
-                $('#container-right').append(
-                    $('<ul>').attr('id','content-right'));
-                $.getJSON( url, function( data ) {
-                    $.each( data, function( key, val ) {
-                        $('#content-right').append( "<li id='" + key + "'>" + key + ' : '+  val +"</li>" );
-                    });
-                    if(data.user_Is_Owner === true){
-                        $('#content-right').append($('<a>').attr({href:data.url,id:"edit_offer"}).append($('<span>').text('Edit')));
-                        $('#content-right').append($('<a>').attr({href:data.url,id:"delete_detail"}).append($('<span>').text('Delete')));
-                    }
-                });
-
-            }); 
-
-
-////////////////////////////////////////////////////// LOAD FORM  ///////////////////////////////////////////////////////////////////////////
-            // load form in the container right balise for project, demand, offer
-            $('.create').on('click', function(e){
-                e.preventDefault();
-                var url = this.href;
-                $('#container-right').empty();
-                $('#container-right').load(url + ' #form_creation')
-
-            }); 
-
-
-///////////////////////////////////////////////////////////////////////////POST////////////////////////////////////////////////////////////////////////////////////////////
-            //post demand to back end
-            $('#container-right').on("submit","#form_demand",function(e){
-                $.post('/rest_api/demands/', $('#form_demand').serialize())
-                .done(function(data){
-                    var url = data.url;
-                    $('#container-right').empty();
-                    $('#container-right').append(
-                        $('<ul>').attr('id','content-right'));
-
-                    $.getJSON( url, function( data ) {  //show the data just created in the right container
-                        $.each( data, function( key, val ) {
-                            $('#content-right').append( "<li id='" + key + "'>" + key + ' : '+  val + "</li>" );
-                        });
-                    });
-                    $('#demands_table').append(  // add the link to the list
-                        $('<li>').append(
-                            $('<a>').attr({href:url, class:"demand_detail"}).append(
-                                $('<span>').text(data.title)
-                    )));
-                    
-                });
-                e.preventDefault();
-
-            });
-
-            // post offer to back end
-            $('#container-right').on("submit","#form_offer",function(e){
-                $.post('/rest_api/offers/', $('#form_offer').serialize())
-                .done(function(data){
-
-                    var url = data.url;
-                    $('#container-right').empty();
-                    $('#container-right').append(
-                        $('<ul>').attr('id','content-right'));
-                    $.getJSON( url, function( data ) {   //show the data just created in the right container
-                        $.each( data, function( key, val ) {
-                            $('#content-right').append( "<li id='" + key + "'>" + key + ' : '+ val + "</li>" );
-                        });
-                    });
-                    $('#offers_table').append(  // add the link to the list
-                        $('<li>').append(
-                            $('<a>').attr({href:url, class:"offer_detail"}).append(
-                                $('<span>').text(data.title)
-                    )));
-                    
-                });
-                e.preventDefault();
-
-            });
-    //////////////////////////////////////////////////////////////PROJECT //////////////////////////////////////////////////////////
-            $('#container-right').on("change","#selectType", function(){
-                if($(this).val()==="CP"){
-                    $('#Form_Attendee').css('display','None');
-                    $('#Form_Volunteer').css('display','');
-                }
-                else if($(this).val()==="CO"){
-                    $('#Form_Attendee').css('display','');
-                    $('#Form_Volunteer').css('display','None'); 
-                }
-                else{
-                    $('#Form_Attendee').css('display','');
-                    $('#Form_Volunteer').css('display',''); 
-                }
-            });
-            $('#container-right').on("click","#Role1General", function(){
-                
-                if($(this).is(':checked')){
-                    $('#Form_Role1').css('display','');
-                }
-                else if (!$(this).is(':checked')){
-                    $('#Form_Role1').css('display','None');
-                }
-
-            });
-
-            // post project to back end
-            $('#container-right').on("submit","#form_project",function(e){
-                var data_to_send = $('#form_project').serializeObject();   
-                final_data = JSON.stringify(data_to_send);  
-                var csrf = $('#right').find('input[name=csrfmiddlewaretoken]').val();   
-                $.ajax({
-                    url: '/rest_api/projects/',
-                    data: final_data ,
-                    dataType:"json",
-                    method: "POST",
-                    contentType: 'application/json; charset=UTF-8',  // add this line
-                    beforeSend: function(xhr) {
-                        xhr.setRequestHeader("X-CSRFToken", csrf);
-                    },
-                    success: function(result){
-                    var url = result.url;
-                    $('#container-right').empty();
-                    $('#container-right').append(
-                        $('<ul>').attr('id','content-right'));
-                    $.getJSON( url, function( result ) {   //show the data just created in the right container
-                        $.each( result, function( key, val ) {
-                            $('#content-right').append( "<li id='" + key + "'>" + key + ' : '+ val + "</li>" );
-                        });
-                    });
-                    $('#projects_table').append(  // add the link to the list
-                        $('<li>').append(
-                            $('<a>').attr({href:url, class:"project_detail"}).append(
-                                $('<span>').text(result.name)
-                    )));
-                    
-                }});
-                e.preventDefault();
-
-            });
-//////////////////////////////////////////////////////////////////DELETE/////////////////////////////////////////////////////////////////////////////////////////
-
-            $('#container-right').on("click", "#delete_detail", function(e){
-                var url = this.href;
-                var csrf = $('#right').find('input[name=csrfmiddlewaretoken]').val();                
-                $.ajax({
-                    url: url,
-                    method: "DELETE",
-                    beforeSend: function(xhr) {
-                        xhr.setRequestHeader("X-CSRFToken", csrf);
-                    },
-                    success: function(result){
-                        $('#container-right').empty();
-                        $('#container-right').append($('<p>').text('DELETED WITH SUCCESS'));
-
-                        $("a[href='"+url+"']").closest('li').remove()
-                    }
-                });
-                e.preventDefault();
-            });
-
-////////////////////////////////////////////////////////////////UPDATE////////////////////////////////////////////////////////////////////////////////////
-
-    ///////////////////////////////////////////////////////////GET///////////////////////////////////////////////////////////////////////////////////
-
-            $('#container-right').on("click", "#edit_demand", function(e){
-                url = this.href;
-                $('#container-right').empty();
-                $('#container-right').load('/update_demand/' + ' #form_update');                
-                $.getJSON( url, function(data) {
-                    $('#inputTitle').attr('value', data.title);
-                    $('#inputNumber').attr('value', data.number);
-                    $('#inputStreet').attr('value', data.street);
-                    $('#inputCity').attr('value', data.city);
-                    $('#inputZip').attr('value', data.postal_code);
-                    $('#inputIsCAPS').prop('checked',data.is_CAPS);
-                    $('#inputIsBarter').prop('checked',data.is_BARTER);
-                    $('#inputIsGive').prop('checked',data.is_GIVE);
-                    $('#inputCAPS').attr('value', data.price_CAPS);
-                    $('#inputBarter').attr('value', data.price_barter);
-                    $('#inputDescription').text(data.description);
-                    $('#updateTheForm').attr('action',url);
-                });
-                e.preventDefault();
-            });
-
-            $('#container-right').on("click", "#edit_offer", function(e){
-                url = this.href;
-                $('#container-right').empty();
-                $('#container-right').load('/update_offer/' + ' #form_update');
-                $.getJSON( url, function(data) {
-                   $('#inputTitle').attr('value', data.title);
-                   $('#inputNumber').attr('value', data.number);
-                   $('#inputStreet').attr('value', data.street);
-                   $('#inputCity').attr('value', data.city);
-                   $('#inputZip').attr('value', data.postal_code);
-                   $('#inputIsCAPS').prop('checked',data.is_CAPS);
-                   $('#inputIsBarter').prop('checked',data.is_BARTER);
-                   $('#inputIsGive').prop('checked',data.is_GIVE);
-                   $('#inputCAPS').attr('value', data.price_CAPS);
-                   $('#inputBarter').attr('value', data.price_barter);
-                   $('#inputDescription').text(data.description);
-                   $('#updateTheForm').attr('action',url);
-                });
-                e.preventDefault();
-            });
-
-    ///////////////////////////////////////////////////////////PUT///////////////////////////////////////////////////////////////////////////////////
-            $('#container-right').on("click", "#Edit_Form", function(e){
-                var url = $('#updateTheForm').attr('action');
-                var csrf = $('#right').find('input[name=csrfmiddlewaretoken]').val();                
-                $.ajax({
-                    url: url,
-                    data: $("#updateTheForm").serialize() ,
-                    method: "PUT",
-                    beforeSend: function(xhr) {
-                        xhr.setRequestHeader("X-CSRFToken", csrf);
-                    },
-                    success: function(result){
-                        $('#container-right').empty();
-                        $('#container-right').append($('<p>').text('UPDATED WITH SUCCESS'));
-                    }
-                });
-                e.preventDefault();
-            });
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        }
-    };
-    
-    xhr.open('GET', '/rest_api/hubs/1/', true);
-    xhr.send(null);
-
+    });
 
 })
     

@@ -61,11 +61,15 @@ $(document).ready(function(){
     var link = '/rest_api/profiles/'+userId+'/'
     $.getJSON( link, function( data ){ // load profile data
         $.getJSON(data.profile_hub[0].hub, function(result){ // load projects in the hub (for the moment user can have only one hub)
-            for (i in result.projects){
+            var projects= result.projects;
+            projects.sort(function(a,b) { 
+                return new Date(a.project.start)- new Date(b.project.start)
+            });
+            for (i in projects){
                 
                 $('#projects_table').append(
                     $('<li>').append(
-                        $('<a>').attr('href','/detail_project/'+result.projects[i].project.id +'/').append(
+                        $('<a>').attr('href','/detail_project/'+projects[i].project.id +'/').append(
                             $('<div>').attr('class','box_list row').append(
                                 $('<div>').attr('class','col-2 logo_list').append(
                                     $('<object>').attr({'data':logo,width:'100%',height:'100%','type':"image/svg+xml"})
@@ -74,23 +78,23 @@ $(document).ready(function(){
                                 $('<div>').attr('class','col-10').append(
                                     $('<div>').attr('class','row').append(
                                         $('<div>').attr('class','col-7').append(
-                                            $('<h5>').text(result.projects[i].project.name)
+                                            $('<h5>').text(projects[i].project.name)
                                         )
                                     ).append(
                                         $('<div>').attr('class','col-5').css({'text-align':'right','font-style':'italic'}).append(
-                                            $('<span>').text(format_time(result.projects[i].project.start))
+                                            $('<span>').text(format_time(projects[i].project.start))
                                         )
                                     )
                                 ).append(
                                     $('<div>').attr('class','row').append(
                                         $('<div>').attr('class','col-12').append(
-                                            $('<span>').text(format_community(result.projects[i].project.project_type))
+                                            $('<span>').text(format_community(projects[i].project.project_type))
                                         )
                                     )
                                 ).append(
                                     $('<div>').attr('class','row').append(
                                         $('<div>').attr('class','col-8').append(
-                                            $('<span>').text(going(result.projects[i].project.volunteers, result.projects[i].project.attendees ))
+                                            $('<span>').text(going(projects[i].project.volunteers, projects[i].project.attendees ))
                                         )
                                     ).append(
                                         $('<div>').attr('class','col-4').css({'text-align':'right'}).append(
