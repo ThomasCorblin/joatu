@@ -34,7 +34,7 @@ class OfferSerializer(serializers.HyperlinkedModelSerializer):
 class DemandShortSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Demand
-        fields = ('url','title', 'requester','is_CAPS','is_BARTER','is_GIVE', 'created','updated', )
+        fields = ('url','title', 'requester','is_CAPS','is_BARTER','is_GIVE','price_CAPS', 'created','updated', )
 
 
 class Demand_HubSerializer(serializers.HyperlinkedModelSerializer):
