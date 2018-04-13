@@ -6,7 +6,7 @@
 - [Goals](#goals)
 - [About](#about)
 - [What It Does Not Do](#what-it-does-not-do)
-- [Setting Expectations](#Setting Expectations)
+- [Setting Expectations](#setting-expectations)
 
 ## Mantra
 // TODO: Put a short 'marketing' description of the projects intent. Think a short phrase like ```don't be evil``` or ```Just Do It!```
